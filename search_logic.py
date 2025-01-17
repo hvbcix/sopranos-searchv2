@@ -70,9 +70,10 @@ def jaccard_similarity(query, document):
     return len(intersection) / len(union) if len(union) > 0 else 0
 
 
-def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metric="cosine", top_n=10):
+def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metric="cosine", top_n=10, sort_by=None):
     """
-    Wyszukuje teksty najbardziej podobne do zapytania na podstawie wybranej miary podobieństwa.
+    Wyszukuje teksty najbardziej podobne do zapytania na podstawie wybranej miary podobieństwa
+    oraz sortuje wyniki według podanej kolumny.
     """
     query = preprocess_text(query)
 
@@ -100,4 +101,14 @@ def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metri
     # Pobranie wyników z DataFrame
     results = df.iloc[sorted_indices][['Line_Number', 'Season', 'Episode', 'Text']].copy()
     results['Similarity'] = [similarities[i] for i in sorted_indices]
+
+    # Dodanie sortowania wyników według `sort_by`
+    if sort_by == "word_count":
+        results['Word_Count'] = results['Text'].apply(lambda x: len(x.split()))
+        results = results.sort_values(by='Word_Count', ascending=False)
+    elif sort_by == "character_count":
+        results['Character_Count'] = results['Text'].apply(len)
+        results = results.sort_values(by='Character_Count', ascending=False)
+
     return results
+

@@ -21,6 +21,13 @@
             <option value="100" {% if top_n == 100 %}selected{% endif %}>100 results</option>
         </select>
 
+        <!-- Dropdown do sortowania -->
+        <select name="sort_by">
+            <option value="" {% if sort_by == None %}selected{% endif %}>No Sorting</option>
+            <option value="word_count" {% if sort_by == "word_count" %}selected{% endif %}>Sort by Word Count</option>
+            <option value="character_count" {% if sort_by == "character_count" %}selected{% endif %}>Sort by Character Count</option>
+        </select>
+
         <!-- Dropdown z wyborem jednego sezonu -->
         <select name="season">
             <option value="all" {% if not selected_season or selected_season == "all" %}selected{% endif %}>All Seasons</option>
