@@ -7,12 +7,17 @@ from nltk.corpus import stopwords
 
 stop_words = set(stopwords.words("english"))
 
-def fetch_texts_from_db(database_path="database/sopranos_data.db"):
+def fetch_texts_from_db(season=None):
     """
-    Pobiera dane z bazy SQLite i zwraca DataFrame.
+    Pobiera teksty z bazy SQLite z opcjonalnym filtrem sezonu.
     """
-    conn = sqlite3.connect(database_path)
-    query = "SELECT Line_Number, Text, Season, Episode FROM transcripts"
+    conn = sqlite3.connect("database/sopranos_data.db")
+    query = "SELECT * FROM transcripts"
+    
+    # Jeśli podano sezon, dodaj warunek WHERE
+    if season is not None:
+        query += f" WHERE Season = {season}"
+
     df = pd.read_sql_query(query, conn)
     conn.close()
     return df
