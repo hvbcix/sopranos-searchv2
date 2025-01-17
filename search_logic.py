@@ -3,7 +3,9 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import string
+from nltk.corpus import stopwords
 
+stop_words = set(stopwords.words("english"))
 
 def fetch_texts_from_db(database_path="database/sopranos_data.db"):
     """
@@ -27,9 +29,16 @@ def prepare_data_for_tfidf(df):
 
 def preprocess_text(text):
     """
-    Funkcja do wstępnego przetwarzania tekstu: usuwa interpunkcję, ignoruje wielkość znaków.
+    Przetwarza tekst, usuwając interpunkcję, konwertując na małe litery i ignorując stopwords.
     """
-    return text.translate(str.maketrans("", "", string.punctuation)).lower()
+    # Usuwanie interpunkcji
+    text = text.translate(str.maketrans("", "", string.punctuation))
+    # Konwersja na małe litery
+    text = text.lower()
+    # Usuwanie stopwords
+    words = text.split()
+    filtered_words = [word for word in words if word not in stop_words]
+    return " ".join(filtered_words)
 
 
 def calculate_tfidf_matrix(df):
@@ -56,7 +65,7 @@ def jaccard_similarity(query, document):
     return len(intersection) / len(union) if len(union) > 0 else 0
 
 
-def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metric="cosine", top_n=10):
+def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metric="cosine", top_n=100):
     """
     Wyszukuje teksty najbardziej podobne do zapytania na podstawie wybranej miary podobieństwa.
     """
@@ -73,10 +82,17 @@ def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metri
         # Obliczanie miary Jaccarda dla każdego tekstu
         similarities = df['Processed_Text'].apply(lambda doc: jaccard_similarity(query, doc)).values
 
+    # Filtrowanie wyników z similarity > 0.0
+    valid_indices = [i for i, sim in enumerate(similarities) if sim > 0.0]
+    similarities = similarities[valid_indices]
+    filtered_df = df.iloc[valid_indices]
+
     # Pobranie indeksów Top N wyników
     top_indices = similarities.argsort()[-top_n:][::-1]
 
     # Pobranie wyników z DataFrame
-    results = df.iloc[top_indices][['Line_Number', 'Season', 'Episode', 'Text']].copy()
+    results = filtered_df.iloc[top_indices][['Line_Number', 'Season', 'Episode', 'Text']].copy()
     results['Similarity'] = similarities[top_indices]
+
+    # Zwróć tylko wyniki, które mają similarity > 0.0
     return results

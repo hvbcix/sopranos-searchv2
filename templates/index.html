@@ -13,11 +13,18 @@
             <option value="cosine" {% if similarity_metric == "cosine" %}selected{% endif %}>Cosine Similarity</option>
             <option value="jaccard" {% if similarity_metric == "jaccard" %}selected{% endif %}>Jaccard Similarity</option>
         </select>
+        <select name="top_n">
+            <option value="25" {% if top_n == 25 %}selected{% endif %}>25 results</option>
+            <option value="50" {% if top_n == 50 %}selected{% endif %}>50 results</option>
+            <option value="100" {% if top_n == 100 %}selected{% endif %}>100 results</option>
+        </select>
         <button type="submit">Search</button>
     </form>
 
     <h2>Results</h2>
-    {% if results %}
+    {% if no_results %}
+        <p>No results found for your query.</p>
+    {% else %}
         <ul>
             {% for result in results %}
                 <li>
@@ -26,8 +33,6 @@
                 </li>
             {% endfor %}
         </ul>
-    {% else %}
-        <p>No results found.</p>
     {% endif %}
 </body>
 </html>
