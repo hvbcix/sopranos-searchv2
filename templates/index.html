@@ -21,6 +21,13 @@
             <option value="100" {% if top_n == 100 %}selected{% endif %}>100 results</option>
         </select>
 
+        <!-- Dropdown do wyboru filtra typu -->
+        <select name="filter_type">
+            <option value="" {% if filter_type == None %}selected{% endif %}>All Sentence Types</option>
+            <option value="question" {% if filter_type == "question" %}selected{% endif %}>Questions Only</option>
+            <option value="exclamation" {% if filter_type == "exclamation" %}selected{% endif %}>Exclamations Only</option>
+        </select>
+
         <!-- Dropdown do sortowania -->
         <select name="sort_by">
             <option value="" {% if sort_by == None %}selected{% endif %}>No Sorting</option>
