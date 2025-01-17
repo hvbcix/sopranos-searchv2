@@ -77,6 +77,16 @@ df["Is_Exclamation"] = df["Text"].apply(is_exclamation)
 df["Contains_Name"] = df["Text"].apply(contains_name)
 df["Contains_Food"] = df["Text"].apply(contains_food_reference)
 
+# Usunięcie wierszy z pustymi wartościami w kolumnie "Text"
+df = df.dropna(subset=['Text'])
+
+# Sprawdź liczbę brakujących wartości w kolumnie "Text"
+missing_values_count = df['Text'].isnull().sum()
+
+if missing_values_count > 0:
+    print(f"Kolumna 'Text' zawiera {missing_values_count} brakujących wartości.")
+else:
+    print("Kolumna 'Text' nie zawiera brakujących wartości.")
 
 # Zapis do nowego pliku CSV
 df.to_csv(output_file, index=False, encoding="utf-8")
