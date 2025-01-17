@@ -45,18 +45,33 @@ def calculate_tfidf_matrix(df):
     return vectorizer, tfidf_matrix
 
 
-def search_with_cosine_similarity(query, vectorizer, tfidf_matrix, df, top_n=10):
+def jaccard_similarity(query, document):
     """
-    Wyszukuje teksty najbardziej podobne do zapytania na podstawie Cosine Similarity.
+    Oblicza miarę Jaccarda pomiędzy zapytaniem a dokumentem.
     """
-    # Wstępne przetwarzanie zapytania
+    query_set = set(query.split())
+    document_set = set(document.split())
+    intersection = query_set.intersection(document_set)
+    union = query_set.union(document_set)
+    return len(intersection) / len(union) if len(union) > 0 else 0
+
+
+def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metric="cosine", top_n=10):
+    """
+    Wyszukuje teksty najbardziej podobne do zapytania na podstawie wybranej miary podobieństwa.
+    """
     query = preprocess_text(query)
 
-    # Obliczanie wektora TF-IDF dla zapytania
-    query_vector = vectorizer.transform([query])
+    if similarity_metric == "cosine":
+        # Obliczanie wektora TF-IDF dla zapytania
+        query_vector = vectorizer.transform([query])
 
-    # Obliczanie podobieństwa cosinusowego
-    similarities = cosine_similarity(query_vector, tfidf_matrix).flatten()
+        # Obliczanie podobieństwa cosinusowego
+        similarities = cosine_similarity(query_vector, tfidf_matrix).flatten()
+
+    elif similarity_metric == "jaccard":
+        # Obliczanie miary Jaccarda dla każdego tekstu
+        similarities = df['Processed_Text'].apply(lambda doc: jaccard_similarity(query, doc)).values
 
     # Pobranie indeksów Top N wyników
     top_indices = similarities.argsort()[-top_n:][::-1]

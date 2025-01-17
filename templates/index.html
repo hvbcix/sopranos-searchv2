@@ -9,6 +9,10 @@
     <h1>Sopranos Search Engine</h1>
     <form method="POST">
         <input type="text" name="query" placeholder="Type your search..." value="{{ query }}">
+        <select name="similarity_metric">
+            <option value="cosine" {% if similarity_metric == "cosine" %}selected{% endif %}>Cosine Similarity</option>
+            <option value="jaccard" {% if similarity_metric == "jaccard" %}selected{% endif %}>Jaccard Similarity</option>
+        </select>
         <button type="submit">Search</button>
     </form>
 
