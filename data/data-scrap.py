@@ -50,11 +50,11 @@ def scrape_episode(episode_url):
     for line_number, line in enumerate(lines, start=1):
         cleaned_line = line.lstrip("-").strip()  # Usuwa "-" z początku i nadmiarowe spacje        
         data.append({
-            "Line Number": line_number,
+            "Line_Number": line_number,
             "Text": cleaned_line,
             "Season": season_number,
             "Episode": episode_number,
-            "Episode Name": episode_name
+            "Episode_Name": episode_name
         })
     return data
 
@@ -72,6 +72,6 @@ all_transcripts = scrape_all_episodes(episode_links)
 
 # Zapisz dane do pliku CSV
 df = pd.DataFrame(all_transcripts)
-output_file = "sopranos_transcripts_full.csv"
+output_file = "data/sopranos_transcripts_full.csv"
 df.to_csv(output_file, index=False, encoding="utf-8")
 print(f"Transkrypty zapisane do pliku {output_file}")

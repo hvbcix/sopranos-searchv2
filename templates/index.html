@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sopranos Search</title>
+</head>
+<body>
+    <h1>Sopranos Search Engine</h1>
+    <form method="POST">
+        <input type="text" name="query" placeholder="Type your search..." value="{{ query }}">
+        <button type="submit">Search</button>
+    </form>
+
+    <h2>Results</h2>
+    {% if results %}
+        <ul>
+            {% for result in results %}
+                <li>
+                    <strong>Line {{ result['Line Number'] }}, Season {{ result['Season'] }}, Episode {{ result['Episode'] }}</strong>: {{ result['Text'] }}
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No results found.</p>
+    {% endif %}
+</body>
+</html>

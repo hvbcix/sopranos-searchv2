@@ -1,5 +1,6 @@
 import pandas as pd
 import string
+import re
 
 # Wczytaj listę przekleństw z pliku
 with open("data/badwords.txt", "r", encoding="utf-8") as f:
@@ -59,15 +60,23 @@ def is_question(text):
 def is_exclamation(text):
     return text.strip().endswith("!")
 
+def remove_character_prefix(text):
+    # Usuwamy prefiks w formacie "IMIĘ:" z początku linii
+    return re.sub(r"^[A-Z]+:\s*", "", text)
+
+df["Text"] = df["Text"].apply(remove_character_prefix)
+
+
 # Dodanie kolumn
-df["Word Count"] = df["Text"].apply(word_count)
-df["Contains Profanity"] = df["Text"].apply(contains_profanity)
-df["Contains Italian"] = df["Text"].apply(contains_italian_word)
-df["Character Count"] = df["Text"].apply(character_count)
-df["Is Question"] = df["Text"].apply(is_question)
-df["Is Exclamation"] = df["Text"].apply(is_exclamation)
-df["Contains Name"] = df["Text"].apply(contains_name)
-df["Contains Food Reference"] = df["Text"].apply(contains_food_reference)
+df["Word_Count"] = df["Text"].apply(word_count)
+df["Contains_Profanity"] = df["Text"].apply(contains_profanity)
+df["Contains_Italian"] = df["Text"].apply(contains_italian_word)
+df["Character_Count"] = df["Text"].apply(character_count)
+df["Is_Question"] = df["Text"].apply(is_question)
+df["Is_Exclamation"] = df["Text"].apply(is_exclamation)
+df["Contains_Name"] = df["Text"].apply(contains_name)
+df["Contains_Food"] = df["Text"].apply(contains_food_reference)
+
 
 # Zapis do nowego pliku CSV
 df.to_csv(output_file, index=False, encoding="utf-8")
