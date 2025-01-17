@@ -65,7 +65,7 @@ def jaccard_similarity(query, document):
     return len(intersection) / len(union) if len(union) > 0 else 0
 
 
-def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metric="cosine", top_n=100):
+def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metric="cosine", top_n=10):
     """
     Wyszukuje teksty najbardziej podobne do zapytania na podstawie wybranej miary podobieństwa.
     """
@@ -82,17 +82,17 @@ def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metri
         # Obliczanie miary Jaccarda dla każdego tekstu
         similarities = df['Processed_Text'].apply(lambda doc: jaccard_similarity(query, doc)).values
 
-    # Filtrowanie wyników z similarity > 0.0
+    # Pobranie indeksów wyników z podobieństwem > 0.0
     valid_indices = [i for i, sim in enumerate(similarities) if sim > 0.0]
-    similarities = similarities[valid_indices]
-    filtered_df = df.iloc[valid_indices]
+
+    if not valid_indices:
+        # Jeśli nie ma wyników z podobieństwem > 0.0, zwracamy pusty DataFrame
+        return pd.DataFrame(columns=['Line_Number', 'Season', 'Episode', 'Text', 'Similarity'])
 
     # Pobranie indeksów Top N wyników
-    top_indices = similarities.argsort()[-top_n:][::-1]
+    sorted_indices = sorted(valid_indices, key=lambda i: similarities[i], reverse=True)[:top_n]
 
     # Pobranie wyników z DataFrame
-    results = filtered_df.iloc[top_indices][['Line_Number', 'Season', 'Episode', 'Text']].copy()
-    results['Similarity'] = similarities[top_indices]
-
-    # Zwróć tylko wyniki, które mają similarity > 0.0
+    results = df.iloc[sorted_indices][['Line_Number', 'Season', 'Episode', 'Text']].copy()
+    results['Similarity'] = [similarities[i] for i in sorted_indices]
     return results

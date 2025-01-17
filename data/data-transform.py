@@ -22,6 +22,9 @@ input_file = "data/sopranos_transcripts_full.csv"
 output_file = "data/sopranos_transcripts_enriched.csv"
 df = pd.read_csv(input_file)
 
+# Przypisanie nowego Line_Number (od 1 do n)
+df["Line_Number"] = range(1, len(df) + 1)
+
 # Funkcje pomocnicze
 def word_count(text):
     return len(text.split())

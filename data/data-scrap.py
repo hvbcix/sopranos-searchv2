@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import pandas as pd
 import re
+import time
 
 # URL głównej strony serialu
 base_url = "https://subslikescript.com/series/The_Sopranos-141842"
@@ -20,17 +21,29 @@ episode_links = [
 
 # Funkcja do scrapowania jednego odcinka
 def scrape_episode(episode_url):
-    response = requests.get(episode_url)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+    }
+    response = requests.get(episode_url, headers=headers)
+    print(f"URL: {episode_url} - Status Code: {response.status_code}")
     soup = BeautifulSoup(response.content, "html.parser")
+        # Zapisuje HTML do pliku debug.html, żeby zobaczyć zawartość strony
+    with open("debug.html", "w", encoding="utf-8") as f:
+        f.write(soup.prettify())
+    print("HTML zapisany do debug.html")
+
     
-    # Znajdź sekcję z transkryptem
+    # Szukamy sekcji "full-script"
     transcript_section = soup.find("div", class_="full-script")
+    if not transcript_section:
+        # Alternatywna sekcja, jeśli full-script nie istnieje
+        transcript_section = soup.find("div", class_="script-content")
     if not transcript_section:
         print(f"Brak transkryptu dla: {episode_url}")
         return []
     
     # Wzorzec do wyciągnięcia sezonu, odcinka i nazwy odcinka
-    pattern = r"season-(\d+)/episode-(\d+)-(.+)"
+    pattern = r"season-(\d+)\/episode-(\d+)-(.+)"
     match = re.search(pattern, episode_url)
     
     if not match:
@@ -63,8 +76,12 @@ def scrape_all_episodes(links):
     all_data = []
     for link in links:
         print(f"Scrapowanie: {link}")
-        episode_data = scrape_episode(link)
-        all_data.extend(episode_data)
+        try:
+            episode_data = scrape_episode(link)
+            all_data.extend(episode_data)
+            time.sleep(2)  # Dodaj opóźnienie 2 sekundy między żądaniami
+        except Exception as e:
+            print(f"Błąd podczas scrapowania {link}: {e}")
     return all_data
 
 # Scrapuj wszystkie odcinki

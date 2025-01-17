@@ -3,7 +3,7 @@ from search_logic import fetch_texts_from_db, prepare_data_for_tfidf, calculate_
 
 app = Flask(__name__)
 
-# Inicjalizacja danych
+# Przygotowanie danych
 df = fetch_texts_from_db()
 df = prepare_data_for_tfidf(df)
 vectorizer, tfidf_matrix = calculate_tfidf_matrix(df)
