@@ -17,6 +17,7 @@ def home():
     selected_season = "all"  # Domyślny wybór (wszystkie sezony)
     filter_type = None  # Domyślny brak filtra typu
     sort_by = None
+    contains_profanity = None
 
     if request.method == "POST":
         query = request.form.get("query")  # Pobieranie zapytania z formularza
@@ -25,6 +26,7 @@ def home():
         selected_season = request.form.get("season", "all")  # Pobieranie wybranego sezonu
         filter_type = request.form.get("filter_type", None)  # Pobieranie filtra typu
         sort_by = request.form.get("sort_by", None)  # Pobieranie filtra typu
+        contains_profanity = request.form.get("contains_profanity", None)
 
         if query:
             # Pobieranie danych z bazy z filtrem sezonu
@@ -37,7 +39,7 @@ def home():
             filtered_df = prepare_data_for_tfidf(filtered_df)
             vectorizer, tfidf_matrix = calculate_tfidf_matrix(filtered_df)
             results = search_with_similarity(
-                query, vectorizer, tfidf_matrix, filtered_df, similarity_metric, top_n, filter_type=filter_type, sort_by=sort_by
+                query, vectorizer, tfidf_matrix, filtered_df, similarity_metric, top_n, filter_type=filter_type, sort_by=sort_by, contains_profanity=contains_profanity
             ).to_dict(orient="records")
 
     # Pobieranie unikalnych sezonów do dropdowna
@@ -56,7 +58,8 @@ def home():
         seasons=seasons,
         selected_season=selected_season,  # Przekazanie wybranego sezonu
         filter_type=filter_type,  # Przekazanie filtra typu
-        sort_by=sort_by
+        sort_by=sort_by,
+        contains_profanity=contains_profanity
     )
 
 if __name__ == "__main__":

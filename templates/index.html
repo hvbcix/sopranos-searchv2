@@ -35,6 +35,13 @@
             <option value="character_count" {% if sort_by == "character_count" %}selected{% endif %}>Sort by Character Count</option>
         </select>
 
+            <!-- Dropdown do sortowania -->
+        <select name="contains_profanity">
+            <option value="" {% if contains_profanity == None %}selected{% endif %}>Show All</option>
+            <option value="only_profanity" {% if contains_profanity == "only_profanity" %}selected{% endif %}>Only Profanity</option>
+            <option value="no_profanity" {% if sort_by == "no_profanity" %}selected{% endif %}>No Profanity</option>
+        </select>    
+
         <!-- Dropdown z wyborem jednego sezonu -->
         <select name="season">
             <option value="all" {% if not selected_season or selected_season == "all" %}selected{% endif %}>All Seasons</option>

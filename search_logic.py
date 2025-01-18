@@ -70,7 +70,7 @@ def jaccard_similarity(query, document):
     return len(intersection) / len(union) if len(union) > 0 else 0
 
 
-def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metric="cosine", top_n=10, sort_by=None, filter_type=None):
+def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metric="cosine", top_n=10, sort_by=None, filter_type=None, contains_profanity=None):
     """
     Wyszukuje teksty najbardziej podobne do zapytania na podstawie wybranej miary podobieństwa
     oraz stosuje dodatkowe filtry.
@@ -97,7 +97,7 @@ def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metri
 
     # Pobranie wyników z DataFrame
     sorted_indices = sorted(valid_indices, key=lambda i: similarities[i], reverse=True)[:top_n]
-    results = df.iloc[sorted_indices][['Line_Number', 'Season', 'Episode', 'Text', 'Is_Question', 'Is_Exclamation', "Word_Count", "Character_Count"]].copy()
+    results = df.iloc[sorted_indices][['Line_Number', 'Season', 'Episode', 'Text', 'Is_Question', 'Is_Exclamation', "Word_Count", "Character_Count", "Contains_Profanity"]].copy()
     results['Similarity'] = [similarities[i] for i in sorted_indices]
 
     # Zastosowanie filtra Is_Question lub Is_Exclamation
@@ -105,6 +105,12 @@ def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metri
         results = results[results['Is_Question'] == True]
     elif filter_type == "exclamation":
         results = results[results['Is_Exclamation'] == True]
+
+        # Zastosowanie filtra Is_Question lub Is_Exclamation
+    if contains_profanity == "only_profanity":
+        results = results[results['Contains_Profanity'] == True]
+    elif contains_profanity == "no_profanity":
+        results = results[results['Contains_Profanity'] == False]    
 
     # Dodanie sortowania wyników według `sort_by`
     if sort_by == "word_count":
