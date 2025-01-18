@@ -57,6 +57,13 @@
             <option value="no_name" {% if contains_name == "no_name" %}selected{% endif %}>No Names</option>
         </select>    
 
+                <!-- Dropdown do jedzenia -->
+        <select name="contains_food">
+            <option value="" {% if contains_food == None %}selected{% endif %}>Show All</option>
+            <option value="only_food" {% if contains_food == "only_food" %}selected{% endif %}>Only Food</option>
+            <option value="no_food" {% if contains_food == "no_food" %}selected{% endif %}>No Food</option>
+        </select> 
+
         <!-- Dropdown z wyborem jednego sezonu -->
         <select name="season">
             <option value="all" {% if not selected_season or selected_season == "all" %}selected{% endif %}>All Seasons</option>

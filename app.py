@@ -20,6 +20,7 @@ def home():
     contains_profanity = None
     contains_italian = None
     contains_name = None
+    contains_food = None
 
     if request.method == "POST":
         query = request.form.get("query")  # Pobieranie zapytania z formularza
@@ -31,6 +32,7 @@ def home():
         contains_profanity = request.form.get("contains_profanity", None)
         contains_italian = request.form.get("contains_italian", None)
         contains_name = request.form.get("contains_name", None)
+        contains_food = request.form.get("contains_food", None)
 
         if query:
             # Pobieranie danych z bazy z filtrem sezonu
@@ -43,7 +45,7 @@ def home():
             filtered_df = prepare_data_for_tfidf(filtered_df)
             vectorizer, tfidf_matrix = calculate_tfidf_matrix(filtered_df)
             results = search_with_similarity(
-                query, vectorizer, tfidf_matrix, filtered_df, similarity_metric, top_n, filter_type=filter_type, sort_by=sort_by, contains_profanity=contains_profanity, contains_italian=contains_italian, contains_name=contains_name
+                query, vectorizer, tfidf_matrix, filtered_df, similarity_metric, top_n, filter_type=filter_type, sort_by=sort_by, contains_profanity=contains_profanity, contains_italian=contains_italian, contains_name=contains_name, contains_food=contains_food
             ).to_dict(orient="records")
 
     # Pobieranie unikalnych sezonów do dropdowna
@@ -65,7 +67,8 @@ def home():
         sort_by=sort_by,
         contains_profanity=contains_profanity,
         contains_italian=contains_italian,
-        contains_name=contains_name
+        contains_name=contains_name,
+        contains_food=contains_food
     )
 
 if __name__ == "__main__":
