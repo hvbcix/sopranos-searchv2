@@ -16,6 +16,7 @@ def home():
     top_n = 25  # Domyślna liczba wyników
     selected_season = "all"  # Domyślny wybór (wszystkie sezony)
     filter_type = None  # Domyślny brak filtra typu
+    sort_by = None
 
     if request.method == "POST":
         query = request.form.get("query")  # Pobieranie zapytania z formularza
@@ -23,6 +24,7 @@ def home():
         top_n = int(request.form.get("top_n", 25))  # Pobieranie liczby wyników (domyślnie 25)
         selected_season = request.form.get("season", "all")  # Pobieranie wybranego sezonu
         filter_type = request.form.get("filter_type", None)  # Pobieranie filtra typu
+        sort_by = request.form.get("sort_by", None)  # Pobieranie filtra typu
 
         if query:
             # Pobieranie danych z bazy z filtrem sezonu
@@ -35,7 +37,7 @@ def home():
             filtered_df = prepare_data_for_tfidf(filtered_df)
             vectorizer, tfidf_matrix = calculate_tfidf_matrix(filtered_df)
             results = search_with_similarity(
-                query, vectorizer, tfidf_matrix, filtered_df, similarity_metric, top_n, filter_type=filter_type
+                query, vectorizer, tfidf_matrix, filtered_df, similarity_metric, top_n, filter_type=filter_type, sort_by=sort_by
             ).to_dict(orient="records")
 
     # Pobieranie unikalnych sezonów do dropdowna
@@ -53,7 +55,8 @@ def home():
         top_n=top_n,
         seasons=seasons,
         selected_season=selected_season,  # Przekazanie wybranego sezonu
-        filter_type=filter_type  # Przekazanie filtra typu
+        filter_type=filter_type,  # Przekazanie filtra typu
+        sort_by=sort_by
     )
 
 if __name__ == "__main__":

@@ -97,7 +97,7 @@ def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metri
 
     # Pobranie wyników z DataFrame
     sorted_indices = sorted(valid_indices, key=lambda i: similarities[i], reverse=True)[:top_n]
-    results = df.iloc[sorted_indices][['Line_Number', 'Season', 'Episode', 'Text', 'Is_Question', 'Is_Exclamation']].copy()
+    results = df.iloc[sorted_indices][['Line_Number', 'Season', 'Episode', 'Text', 'Is_Question', 'Is_Exclamation', "Word_Count", "Character_Count"]].copy()
     results['Similarity'] = [similarities[i] for i in sorted_indices]
 
     # Zastosowanie filtra Is_Question lub Is_Exclamation
