@@ -35,11 +35,26 @@
             <option value="character_count" {% if sort_by == "character_count" %}selected{% endif %}>Sort by Character Count</option>
         </select>
 
-            <!-- Dropdown do sortowania -->
+            <!-- Dropdown do przkleństw -->
         <select name="contains_profanity">
             <option value="" {% if contains_profanity == None %}selected{% endif %}>Show All</option>
             <option value="only_profanity" {% if contains_profanity == "only_profanity" %}selected{% endif %}>Only Profanity</option>
-            <option value="no_profanity" {% if sort_by == "no_profanity" %}selected{% endif %}>No Profanity</option>
+            <option value="no_profanity" {% if contains_profanity == "no_profanity" %}selected{% endif %}>No Profanity</option>
+        </select>
+        
+        
+        <!-- Dropdown do włoskiego -->
+        <select name="contains_italian">
+            <option value="" {% if contains_italian == None %}selected{% endif %}>Show All</option>
+            <option value="only_italian" {% if contains_italian == "only_italian" %}selected{% endif %}>Only Italian</option>
+            <option value="no_italian" {% if contains_italian == "no_italian" %}selected{% endif %}>No Italian</option>
+        </select>
+        
+        <!-- Dropdown do imienia -->
+        <select name="contains_name">
+            <option value="" {% if contains_name == None %}selected{% endif %}>Show All</option>
+            <option value="only_name" {% if contains_name == "only_name" %}selected{% endif %}>Only Name</option>
+            <option value="no_name" {% if contains_name == "no_name" %}selected{% endif %}>No Names</option>
         </select>    
 
         <!-- Dropdown z wyborem jednego sezonu -->

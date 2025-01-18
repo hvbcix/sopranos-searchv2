@@ -70,7 +70,7 @@ def jaccard_similarity(query, document):
     return len(intersection) / len(union) if len(union) > 0 else 0
 
 
-def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metric="cosine", top_n=10, sort_by=None, filter_type=None, contains_profanity=None):
+def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metric="cosine", top_n=10, sort_by=None, filter_type=None, contains_profanity=None, contains_italian=None, contains_name=None):
     """
     Wyszukuje teksty najbardziej podobne do zapytania na podstawie wybranej miary podobieństwa
     oraz stosuje dodatkowe filtry.
@@ -97,7 +97,7 @@ def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metri
 
     # Pobranie wyników z DataFrame
     sorted_indices = sorted(valid_indices, key=lambda i: similarities[i], reverse=True)[:top_n]
-    results = df.iloc[sorted_indices][['Line_Number', 'Season', 'Episode', 'Text', 'Is_Question', 'Is_Exclamation', "Word_Count", "Character_Count", "Contains_Profanity"]].copy()
+    results = df.iloc[sorted_indices][['Line_Number', 'Season', 'Episode', 'Text', 'Is_Question', 'Is_Exclamation', "Word_Count", "Character_Count", "Contains_Profanity", "Contains_Italian", "Contains_Name"]].copy()
     results['Similarity'] = [similarities[i] for i in sorted_indices]
 
     # Zastosowanie filtra Is_Question lub Is_Exclamation
@@ -110,7 +110,19 @@ def search_with_similarity(query, vectorizer, tfidf_matrix, df, similarity_metri
     if contains_profanity == "only_profanity":
         results = results[results['Contains_Profanity'] == True]
     elif contains_profanity == "no_profanity":
-        results = results[results['Contains_Profanity'] == False]    
+        results = results[results['Contains_Profanity'] == False]
+
+             # Zastosowanie filtra Is_Question lub Is_Exclamation
+    if contains_italian == "only_italian":
+        results = results[results['Contains_Italian'] == True]
+    elif contains_italian == "no_italian":
+        results = results[results['Contains_Italian'] == False]
+
+                 # Zastosowanie filtra Is_Question lub Is_Exclamation
+    if contains_name == "only_name":
+        results = results[results['Contains_Name'] == True]
+    elif contains_name == "no_name":
+        results = results[results['Contains_Name'] == False]                 
 
     # Dodanie sortowania wyników według `sort_by`
     if sort_by == "word_count":
