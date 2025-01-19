@@ -20,7 +20,7 @@ html, body {
   .logo {
     display: block;
     margin: 40px auto 20px;  /* Odsunięcie od góry i od dołu */
-    width: 200px;            /* Dopasuj rozmiar logo w razie potrzeby */
+    width: 500px;            /* Dopasuj rozmiar logo w razie potrzeby */
     height: auto;            /* Zachowanie proporcji */
   }
   

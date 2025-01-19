@@ -43,9 +43,9 @@ def plot_occurrences_over_episodes(query):
 
     plt.figure(figsize=(10, 6))
     plt.plot(grouped['EpisodeID'], grouped['occurrences'], marker='o')
-    plt.title(f"Wystąpienia słowa '{query}' w kolejnych odcinkach")
-    plt.xlabel("Kolejny odcinek (przez sezony)")
-    plt.ylabel("Liczba wystąpień")
+    plt.title(f"The word '{query}' over episodes")
+    plt.xlabel("Episodes")
+    plt.ylabel("Occurrences")
     plt.grid(True)
 
     img = BytesIO()
@@ -70,9 +70,9 @@ def plot_occurrences_by_season(query):
 
     plt.figure(figsize=(10, 6))
     plt.bar(grouped["Season"], grouped["occurrences"], color="skyblue")
-    plt.title(f"Liczba wystąpień słowa '{query}' w poszczególnych sezonach")
-    plt.xlabel("Sezon")
-    plt.ylabel("Łączna liczba wystąpień")
+    plt.title(f"The word '{query}' over seasons")
+    plt.xlabel("Seasons")
+    plt.ylabel("Occurrrences")
     plt.grid(axis="y", linestyle="--", alpha=0.7)
 
     buffer = BytesIO()
