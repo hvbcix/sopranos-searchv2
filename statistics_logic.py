@@ -185,7 +185,7 @@ def generate_wordcloud_from_db():
 
     nltk.download('stopwords')  # upewniamy się, że mamy pobrane
     english_stopwords = set(stopwords.words('english'))
-    english_stopwords.update(["i'm"])  # w razie potrzeby
+    english_stopwords.update(["i'm", "get", "got", "i'll"])  # w razie potrzeby
 
 
     # 3. Generowanie chmury słów
