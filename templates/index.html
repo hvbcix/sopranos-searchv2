@@ -1,99 +1,92 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sopranos Search</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sopranos Search</title>
 </head>
 <body>
-    <h1>Sopranos Search Engine</h1>
-    <form method="POST">
-        <input type="text" name="query" placeholder="Type your search..." value="{{ query }}">
-        
-        <select name="similarity_metric">
-            <option value="cosine" {% if similarity_metric == "cosine" %}selected{% endif %}>Cosine Similarity</option>
-            <option value="jaccard" {% if similarity_metric == "jaccard" %}selected{% endif %}>Jaccard Similarity</option>
-        </select>
-        
-        <select name="top_n">
-            <option value="25" {% if top_n == 25 %}selected{% endif %}>25 results</option>
-            <option value="50" {% if top_n == 50 %}selected{% endif %}>50 results</option>
-            <option value="100" {% if top_n == 100 %}selected{% endif %}>100 results</option>
-        </select>
+  <h1>Sopranos Search Engine</h1>
+  
+  <!-- Jeden wspólny formularz -->
+  <form method="POST" action="">
+      <input type="text" name="query" placeholder="Type your search..." value="{{ query }}">
+      
+      <select name="similarity_metric">
+          <option value="cosine" {% if similarity_metric == "cosine" %}selected{% endif %}>Cosine Similarity</option>
+          <option value="jaccard" {% if similarity_metric == "jaccard" %}selected{% endif %}>Jaccard Similarity</option>
+      </select>
+      
+      <select name="top_n">
+          <option value="25" {% if top_n == 25 %}selected{% endif %}>25 results</option>
+          <option value="50" {% if top_n == 50 %}selected{% endif %}>50 results</option>
+          <option value="100" {% if top_n == 100 %}selected{% endif %}>100 results</option>
+      </select>
 
-        <!-- Dropdown do wyboru filtra typu -->
-        <select name="filter_type">
-            <option value="" {% if filter_type == None %}selected{% endif %}>All Sentence Types</option>
-            <option value="question" {% if filter_type == "question" %}selected{% endif %}>Questions Only</option>
-            <option value="exclamation" {% if filter_type == "exclamation" %}selected{% endif %}>Exclamations Only</option>
-        </select>
+      <select name="filter_type">
+          <option value="" {% if filter_type == None %}selected{% endif %}>All Sentence Types</option>
+          <option value="question" {% if filter_type == "question" %}selected{% endif %}>Questions Only</option>
+          <option value="exclamation" {% if filter_type == "exclamation" %}selected{% endif %}>Exclamations Only</option>
+      </select>
 
-        <!-- Dropdown do sortowania -->
-        <select name="sort_by">
-            <option value="" {% if sort_by == None %}selected{% endif %}>No Sorting</option>
-            <option value="word_count" {% if sort_by == "word_count" %}selected{% endif %}>Sort by Word Count</option>
-            <option value="character_count" {% if sort_by == "character_count" %}selected{% endif %}>Sort by Character Count</option>
-        </select>
+      <select name="sort_by">
+          <option value="" {% if sort_by == None %}selected{% endif %}>No Sorting</option>
+          <option value="word_count" {% if sort_by == "word_count" %}selected{% endif %}>Sort by Word Count</option>
+          <option value="character_count" {% if sort_by == "character_count" %}selected{% endif %}>Sort by Character Count</option>
+      </select>
 
-            <!-- Dropdown do przkleństw -->
-        <select name="contains_profanity">
-            <option value="" {% if contains_profanity == None %}selected{% endif %}>Show All</option>
-            <option value="only_profanity" {% if contains_profanity == "only_profanity" %}selected{% endif %}>Only Profanity</option>
-            <option value="no_profanity" {% if contains_profanity == "no_profanity" %}selected{% endif %}>No Profanity</option>
-        </select>
-        
-        
-        <!-- Dropdown do włoskiego -->
-        <select name="contains_italian">
-            <option value="" {% if contains_italian == None %}selected{% endif %}>Show All</option>
-            <option value="only_italian" {% if contains_italian == "only_italian" %}selected{% endif %}>Only Italian</option>
-            <option value="no_italian" {% if contains_italian == "no_italian" %}selected{% endif %}>No Italian</option>
-        </select>
-        
-        <!-- Dropdown do imienia -->
-        <select name="contains_name">
-            <option value="" {% if contains_name == None %}selected{% endif %}>Show All</option>
-            <option value="only_name" {% if contains_name == "only_name" %}selected{% endif %}>Only Name</option>
-            <option value="no_name" {% if contains_name == "no_name" %}selected{% endif %}>No Names</option>
-        </select>    
+      <select name="contains_profanity">
+          <option value="" {% if contains_profanity == None %}selected{% endif %}>Show All</option>
+          <option value="only_profanity" {% if contains_profanity == "only_profanity" %}selected{% endif %}>Only Profanity</option>
+          <option value="no_profanity" {% if contains_profanity == "no_profanity" %}selected{% endif %}>No Profanity</option>
+      </select>
 
-                <!-- Dropdown do jedzenia -->
-        <select name="contains_food">
-            <option value="" {% if contains_food == None %}selected{% endif %}>Show All</option>
-            <option value="only_food" {% if contains_food == "only_food" %}selected{% endif %}>Only Food</option>
-            <option value="no_food" {% if contains_food == "no_food" %}selected{% endif %}>No Food</option>
-        </select> 
+      <select name="contains_italian">
+          <option value="" {% if contains_italian == None %}selected{% endif %}>Show All</option>
+          <option value="only_italian" {% if contains_italian == "only_italian" %}selected{% endif %}>Only Italian</option>
+          <option value="no_italian" {% if contains_italian == "no_italian" %}selected{% endif %}>No Italian</option>
+      </select>
 
-        <!-- Dropdown z wyborem jednego sezonu -->
-        <select name="season">
-            <option value="all" {% if not selected_season or selected_season == "all" %}selected{% endif %}>All Seasons</option>
-            {% for season in seasons %}
-                <option value="{{ season }}" {% if selected_season == season|string %}selected{% endif %}>Season {{ season }}</option>
-            {% endfor %}
-        </select>
+      <select name="contains_name">
+          <option value="" {% if contains_name == None %}selected{% endif %}>Show All</option>
+          <option value="only_name" {% if contains_name == "only_name" %}selected{% endif %}>Only Name</option>
+          <option value="no_name" {% if contains_name == "no_name" %}selected{% endif %}>No Names</option>
+      </select>
 
-        <button type="submit" name="search">Search</button>
-        <button type="submit" name="show_statistics">Show Statistics</button>
-    </form>
+      <select name="contains_food">
+          <option value="" {% if contains_food == None %}selected{% endif %}>Show All</option>
+          <option value="only_food" {% if contains_food == "only_food" %}selected{% endif %}>Only Food</option>
+          <option value="no_food" {% if contains_food == "no_food" %}selected{% endif %}>No Food</option>
+      </select>
 
-    <form method="GET" action="/statistics">
-        <input type="text" name="query" placeholder="Type your search..." value="{{ query }}">
-        <button type="submit">Show Statistics</button>
-    </form>
-    
+      <select name="season">
+          <option value="all" {% if not selected_season or selected_season == "all" %}selected{% endif %}>All Seasons</option>
+          {% for season in seasons %}
+              <option value="{{ season }}" {% if selected_season == season|string %}selected{% endif %}>Season {{ season }}</option>
+          {% endfor %}
+      </select>
 
-    <h2>Results</h2>
-    {% if no_results %}
-        <p>No results found for your query.</p>
-    {% else %}
-        <ul>
-            {% for result in results %}
-                <li>
-                    <strong>Line {{ result['Line_Number'] }}, Season {{ result['Season'] }}, Episode {{ result['Episode'] }}</strong>: {{ result['Text'] }}
-                    <br><em>Similarity: {{ result['Similarity'] }}</em>
-                </li>
-            {% endfor %}
-        </ul>
-    {% endif %}
+      <!-- Dwa przyciski -->
+      <!-- 1) Zwykłe wyszukiwanie (POST na tę samą stronę) -->
+      <button type="submit" name="search">Search</button>
+
+      <!-- 2) GET na /statistics z tymi samymi danymi (m.in. query) -->
+      <!--    kluczowe są: formmethod="GET" i formaction="/statistics" -->
+      <button type="submit" formmethod="GET" formaction="/statistics">Show Statistics</button>
+  </form>
+
+  <h2>Results</h2>
+  {% if no_results %}
+      <p>No results found for your query.</p>
+  {% else %}
+      <ul>
+          {% for result in results %}
+              <li>
+                  <strong>Line {{ result['Line_Number'] }}, Season {{ result['Season'] }}, Episode {{ result['Episode'] }}</strong>: {{ result['Text'] }}
+                  <br><em>Similarity: {{ result['Similarity'] }}</em>
+              </li>
+          {% endfor %}
+      </ul>
+  {% endif %}
 </body>
 </html>
