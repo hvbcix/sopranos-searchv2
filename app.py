@@ -34,6 +34,12 @@ def home():
         contains_name = request.form.get("contains_name", None)
         contains_food = request.form.get("contains_food", None)
 
+        if "show_statistics" in request.form:  # If 'Show Statistics' button is clicked
+            return render_template("statistics.html", query=query)
+
+        if query:
+            results = []  # Replace with actual search logic    
+
         if query:
             # Pobieranie danych z bazy z filtrem sezonu
             if selected_season != "all":
@@ -68,8 +74,13 @@ def home():
         contains_profanity=contains_profanity,
         contains_italian=contains_italian,
         contains_name=contains_name,
-        contains_food=contains_food
+        contains_food=contains_food,
     )
+# Add a new route for the statistics page
+@app.route("/statistics", methods=["GET"])
+def statistics():
+    query = request.args.get("query", "")  # Get the query from the URL parameters
+    return render_template("statistics.html", query=query)
 
 if __name__ == "__main__":
     app.run(debug=True)
