@@ -1,5 +1,6 @@
 from flask import Flask, request, render_template
 from search_logic import fetch_texts_from_db, prepare_data_for_tfidf, calculate_tfidf_matrix, search_with_similarity
+from statistics_logic import calculate_total_occurrences
 
 app = Flask(__name__)
 
@@ -76,11 +77,21 @@ def home():
         contains_name=contains_name,
         contains_food=contains_food,
     )
-# Add a new route for the statistics page
+
+
+
+
 @app.route("/statistics", methods=["GET"])
 def statistics():
-    query = request.args.get("query", "")  # Get the query from the URL parameters
-    return render_template("statistics.html", query=query)
+    query = request.args.get("query", "").strip()  # Get the query from the URL parameters
+    if not query:
+        return render_template("statistics.html", query=query, total_occurrences=None)
+
+    # Calculate total occurrences of the query in the database
+    total_occurrences = calculate_total_occurrences(query)
+
+    return render_template("statistics.html", query=query, total_occurrences=total_occurrences)
+
 
 if __name__ == "__main__":
     app.run(debug=True)

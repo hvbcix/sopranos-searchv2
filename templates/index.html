@@ -76,6 +76,12 @@
         <button type="submit" name="show_statistics">Show Statistics</button>
     </form>
 
+    <form method="GET" action="/statistics">
+        <input type="text" name="query" placeholder="Type your search..." value="{{ query }}">
+        <button type="submit">Show Statistics</button>
+    </form>
+    
+
     <h2>Results</h2>
     {% if no_results %}
         <p>No results found for your query.</p>

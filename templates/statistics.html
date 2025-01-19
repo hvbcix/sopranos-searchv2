@@ -6,8 +6,14 @@
     <title>Statistics</title>
 </head>
 <body>
-    <h1>Query Statistics</h1>
-    <p>You searched for: <strong>{{ query }}</strong></p>
-    <a href="/">Back to Search</a>
+    <h1>Statistics for "{{ query }}"</h1>
+
+    {% if total_occurrences is not none %}
+        <p>The word "{{ query }}" appears {{ total_occurrences }} time(s) in the database.</p>
+    {% else %}
+        <p>No query provided or no occurrences found. Please go back and enter a search term.</p>
+    {% endif %}
+
+    <a href="/">Go Back</a>
 </body>
 </html>
