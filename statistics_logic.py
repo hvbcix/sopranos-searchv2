@@ -1,8 +1,5 @@
-# statistics_logic.py
 import sqlite3
 import pandas as pd
-
-# Dodaj te importy, aby rysować i konwertować wykres na base64:
 import matplotlib
 matplotlib.use('Agg')  # backend 'Agg' pozwala renderować wykresy bez GUI
 import matplotlib.pyplot as plt
@@ -102,3 +99,68 @@ def plot_occurrences_by_season(query):
     plt.close()  # zamykamy rysunek, by zwolnić zasoby
 
     return bar_chart_base64
+
+def plot_sentiment_pie_chart(query):
+    """
+    Tworzy wykres kołowy pokazujący udział dokumentów o sentymencie
+    pozytywnym (Sentiment_Compound > 0), negatywnym (< 0) i neutralnym (= 0)
+    wśród dokumentów, które zawierają dane słowo (query).
+    """
+    # 1. Pobranie danych z bazy
+    conn = sqlite3.connect("database/sopranos_data.db")
+    df = pd.read_sql_query("SELECT Text, Sentiment_Compound FROM transcripts", conn)
+    conn.close()
+
+    # 2. Filtrowanie tylko tych linii, w których występuje słowo (case-insensitive)
+    df["Text"] = df["Text"].str.lower()
+    query_lower = query.lower()
+    df["has_query"] = df["Text"].str.count(rf'\b{query_lower}(?!\w)') > 0
+    
+    df_query = df[df["has_query"] == True].copy()
+    if df_query.empty:
+        # Jeśli żadna linia nie zawiera słowa, można zwrócić None albo "pusty" wykres
+        return None
+
+    # 3. Podział na kategorie sentymentu (powyżej 0 = pozytywny, poniżej 0 = negatywny, równo 0 = neutralny)
+    def classify_sentiment(score):
+        if score > 0:
+            return "positive"
+        elif score < 0:
+            return "negative"
+        else:
+            return "neutral"
+
+    df_query["sentiment_label"] = df_query["Sentiment_Compound"].apply(classify_sentiment)
+
+    # 4. Zliczamy, ile mamy linii w każdej kategorii
+    counts = df_query["sentiment_label"].value_counts()
+
+    # 5. Konfiguracja kolorów (według życzenia)
+    color_map = {
+        "positive": "green",
+        "negative": "red",
+        "neutral": "blue"
+    }
+    # Tworzymy listę kolorów w kolejności odpowiadającej labels z value_counts()
+    labels = counts.index.tolist()
+    colors = [color_map[label] for label in labels]
+
+    # 6. Rysowanie wykresu kołowego
+    plt.figure(figsize=(6, 6))
+    plt.pie(
+        counts.values,
+        labels=labels,
+        colors=colors,
+        autopct='%1.1f%%',  # wyświetla procenty z 1 miejscem po przecinku
+        startangle=140
+    )
+    plt.title(f"Sentiment distribution (word='{query}')")
+
+    # 7. Konwersja do base64
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    pie_chart_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    plt.close()
+
+    return pie_chart_base64

@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template
 from search_logic import fetch_texts_from_db, prepare_data_for_tfidf, calculate_tfidf_matrix, search_with_similarity
-from statistics_logic import calculate_total_occurrences, plot_occurrences_over_episodes, plot_occurrences_by_season
+from statistics_logic import calculate_total_occurrences, plot_occurrences_over_episodes, plot_occurrences_by_season, plot_sentiment_pie_chart
 
 app = Flask(__name__)
 
@@ -90,7 +90,8 @@ def statistics():
             query=query,
             total_occurrences=None, 
             chart_url=None,
-            bar_chart_url=None)
+            bar_chart_url=None,
+            sentiment_pie_chart=None)
 
     # 1. Obliczamy całkowitą liczbę wystąpień
     total_occurrences = calculate_total_occurrences(query)
@@ -100,12 +101,15 @@ def statistics():
 
     bar_chart_url = plot_occurrences_by_season(query)
 
+    sentiment_pie_url = plot_sentiment_pie_chart(query)
+
     # 3. Renderujemy template
     return render_template("statistics.html", 
                            query=query, 
                            total_occurrences=total_occurrences,
                            chart_url=chart_url,
-                           bar_chart_url=bar_chart_url)
+                           bar_chart_url=bar_chart_url,
+                           sentiment_pie_url=sentiment_pie_url)
 
 
 if __name__ == "__main__":

@@ -27,6 +27,11 @@
         <img src="data:image/png;base64,{{ bar_chart_url }}" alt="Bar chart">
     {% endif %}
 
+    {% if sentiment_pie_url %}
+    <h2>Sentiment Pie Chart</h2>
+    <img src="data:image/png;base64,{{ sentiment_pie_url }}" alt="Pie chart">
+    {% endif %}
+
     <br>
     <a href="/">Go Back</a>
 </body>
