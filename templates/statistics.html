@@ -32,6 +32,11 @@
     <img src="data:image/png;base64,{{ sentiment_pie_url }}" alt="Pie chart">
     {% endif %}
 
+    {% if wordcloud_url %}
+  <h2>Word Cloud (All Transcripts)</h2>
+  <img src="data:image/png;base64,{{ wordcloud_url }}" alt="Word Cloud">
+    {% endif %}
+
     <br>
     <a href="/">Go Back</a>
 </body>

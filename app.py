@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template
 from search_logic import fetch_texts_from_db, prepare_data_for_tfidf, calculate_tfidf_matrix, search_with_similarity
-from statistics_logic import calculate_total_occurrences, plot_occurrences_over_episodes, plot_occurrences_by_season, plot_sentiment_pie_chart
+from statistics_logic import calculate_total_occurrences, plot_occurrences_over_episodes, plot_occurrences_by_season, plot_sentiment_pie_chart, generate_wordcloud_from_db
 
 app = Flask(__name__)
 
@@ -103,13 +103,17 @@ def statistics():
 
     sentiment_pie_url = plot_sentiment_pie_chart(query)
 
+    wc_url = generate_wordcloud_from_db()
+
+
     # 3. Renderujemy template
     return render_template("statistics.html", 
                            query=query, 
                            total_occurrences=total_occurrences,
                            chart_url=chart_url,
                            bar_chart_url=bar_chart_url,
-                           sentiment_pie_url=sentiment_pie_url)
+                           sentiment_pie_url=sentiment_pie_url,
+                           wordcloud_url=wc_url)
 
 
 if __name__ == "__main__":

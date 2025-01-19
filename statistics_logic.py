@@ -5,6 +5,9 @@ matplotlib.use('Agg')  # backend 'Agg' pozwala renderować wykresy bez GUI
 import matplotlib.pyplot as plt
 import base64
 from io import BytesIO
+from wordcloud import WordCloud
+from nltk.corpus import stopwords
+import nltk
 
 def calculate_total_occurrences(query):
     """
@@ -164,3 +167,46 @@ def plot_sentiment_pie_chart(query):
     plt.close()
 
     return pie_chart_base64
+
+def generate_wordcloud_from_db():
+    """
+    Pobiera cały tekst z bazy danych i generuje chmurę słów (WordCloud).
+    Zwraca obrazek w formacie base64, aby można go było wyświetlić w HTML.
+    """
+
+    # 1. Połączenie z bazą i pobranie wszystkich linii tekstu
+    conn = sqlite3.connect("database/sopranos_data.db")
+    df = pd.read_sql_query("SELECT Text FROM transcripts", conn)
+    conn.close()
+
+    # 2. Łączymy wszystko w jeden duży string
+    #    i konwertujemy na lowercase dla spójności
+    all_text = " ".join(df["Text"].astype(str)).lower()
+
+    nltk.download('stopwords')  # upewniamy się, że mamy pobrane
+    english_stopwords = set(stopwords.words('english'))
+    english_stopwords.update(["i'm"])  # w razie potrzeby
+
+
+    # 3. Generowanie chmury słów
+    #    Możesz przekazać dodatkowe parametry np. stopwords, szerokość, wysokość...
+    wordcloud = WordCloud(
+        width=800, 
+        height=600,
+        background_color='white',
+        max_words=200,  # maksymalna liczba słów w chmurze
+        stopwords=english_stopwords
+    ).generate(all_text)
+
+    # 4. Konwersja do base64
+    plt.figure(figsize=(10, 8))
+    plt.imshow(wordcloud, interpolation='bilinear')
+    plt.axis("off")  # wyłączenie osi
+    # Zapisujemy do bufora
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    wc_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    plt.close()
+
+    return wc_base64
