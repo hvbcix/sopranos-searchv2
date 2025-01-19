@@ -13,10 +13,10 @@ vectorizer, tfidf_matrix = calculate_tfidf_matrix(df)
 def home():
     results = []
     query = ""
-    similarity_metric = "cosine"  # Domyślna miara podobieństwa
-    top_n = 25  # Domyślna liczba wyników
-    selected_season = "all"  # Domyślny wybór (wszystkie sezony)
-    filter_type = None  # Domyślny brak filtra typu
+    similarity_metric = "cosine"  # Domyślne miary
+    top_n = 25 
+    selected_season = "all"  
+    filter_type = None 
     sort_by = None
     contains_profanity = None
     contains_italian = None
@@ -25,11 +25,11 @@ def home():
 
     if request.method == "POST":
         query = request.form.get("query")  # Pobieranie zapytania z formularza
-        similarity_metric = request.form.get("similarity_metric", "cosine")  # Pobieranie wybranej miary
-        top_n = int(request.form.get("top_n", 25))  # Pobieranie liczby wyników (domyślnie 25)
-        selected_season = request.form.get("season", "all")  # Pobieranie wybranego sezonu
-        filter_type = request.form.get("filter_type", None)  # Pobieranie filtra typu
-        sort_by = request.form.get("sort_by", None)  # Pobieranie filtra typu
+        similarity_metric = request.form.get("similarity_metric", "cosine")  # Pobieranie wybranych miar, filtrów
+        top_n = int(request.form.get("top_n", 25)) 
+        selected_season = request.form.get("season", "all")  
+        filter_type = request.form.get("filter_type", None) 
+        sort_by = request.form.get("sort_by", None)
         contains_profanity = request.form.get("contains_profanity", None)
         contains_italian = request.form.get("contains_italian", None)
         contains_name = request.form.get("contains_name", None)
@@ -77,10 +77,7 @@ def home():
         contains_name=contains_name,
         contains_food=contains_food,
     )
-
-
-
-
+#Strona ze statystykiami
 @app.route("/statistics", methods=["GET"])
 def statistics():
     query = request.args.get("query", "").strip()
@@ -93,10 +90,8 @@ def statistics():
             bar_chart_url=None,
             sentiment_pie_chart=None)
 
-    # 1. Obliczamy całkowitą liczbę wystąpień
     total_occurrences = calculate_total_occurrences(query)
 
-    # 2. Generujemy wykres (base64)
     chart_url = plot_occurrences_over_episodes(query)
 
     bar_chart_url = plot_occurrences_by_season(query)
@@ -105,8 +100,6 @@ def statistics():
 
     wc_url = generate_wordcloud_from_db()
 
-
-    # 3. Renderujemy template
     return render_template("statistics.html", 
                            query=query, 
                            total_occurrences=total_occurrences,

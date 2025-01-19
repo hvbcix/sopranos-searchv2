@@ -54,7 +54,6 @@ def scrape_episode(episode_url):
     episode_number = int(match.group(2))  # Odcinek
     episode_name = match.group(3).replace("_", " ")  # Nazwa odcinka z zamianą "_" na spacje
 
-
     # Podziel transkrypt na linie
     lines = transcript_section.get_text(strip=True, separator="\n").split("\n")
 
