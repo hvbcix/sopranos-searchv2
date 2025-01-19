@@ -25,6 +25,7 @@ def calculate_total_occurrences(query):
     total_occurrences = df['Text'].str.count(rf'\b{query}(?!\w)').sum()
     return total_occurrences
 
+
 def plot_occurrences_over_episodes(query):
     """
     Zwraca dane wykresu (base64-encoded PNG) pokazującego
