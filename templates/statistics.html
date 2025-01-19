@@ -21,6 +21,12 @@
         <img src="data:image/png;base64,{{ chart_url }}" alt="Line chart" />
     {% endif %}
 
+        <!-- WYKRES SŁUPKOWY (Bar Chart) -->
+    {% if bar_chart_url %}
+        <h2>Occurrences By Season (Bar Chart)</h2>
+        <img src="data:image/png;base64,{{ bar_chart_url }}" alt="Bar chart">
+    {% endif %}
+
     <br>
     <a href="/">Go Back</a>
 </body>

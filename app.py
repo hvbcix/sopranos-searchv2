@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template
 from search_logic import fetch_texts_from_db, prepare_data_for_tfidf, calculate_tfidf_matrix, search_with_similarity
-from statistics_logic import calculate_total_occurrences, plot_occurrences_over_episodes
+from statistics_logic import calculate_total_occurrences, plot_occurrences_over_episodes, plot_occurrences_by_season
 
 app = Flask(__name__)
 
@@ -83,10 +83,14 @@ def home():
 
 @app.route("/statistics", methods=["GET"])
 def statistics():
-    query = request.args.get("query", "").strip()  # Get the query from the URL parameters
+    query = request.args.get("query", "").strip()
     if not query:
-        # Zwracamy taki sam szablon, ale bez wartości total_occurrences i bez wykresu
-        return render_template("statistics.html", query=query, total_occurrences=None, chart_url=None)
+        return render_template(
+            "statistics.html",
+            query=query,
+            total_occurrences=None, 
+            chart_url=None,
+            bar_chart_url=None)
 
     # 1. Obliczamy całkowitą liczbę wystąpień
     total_occurrences = calculate_total_occurrences(query)
@@ -94,11 +98,14 @@ def statistics():
     # 2. Generujemy wykres (base64)
     chart_url = plot_occurrences_over_episodes(query)
 
+    bar_chart_url = plot_occurrences_by_season(query)
+
     # 3. Renderujemy template
     return render_template("statistics.html", 
                            query=query, 
                            total_occurrences=total_occurrences,
-                           chart_url=chart_url)
+                           chart_url=chart_url,
+                           bar_chart_url=bar_chart_url)
 
 
 if __name__ == "__main__":

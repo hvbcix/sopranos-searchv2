@@ -66,3 +66,38 @@ def plot_occurrences_over_episodes(query):
     plt.close()  # Ważne, by zwolnić zasoby plotu w Matplotlib
 
     return plot_base64
+
+def plot_occurrences_by_season(query):
+    """
+    Zwraca dane wykresu (base64) przedstawiającego łączną liczbę wystąpień
+    danego słowa w poszczególnych sezonach.
+    """
+    # 1. Pobierz dane z bazy
+    conn = sqlite3.connect("database/sopranos_data.db")
+    df = pd.read_sql_query("SELECT Season, Text FROM transcripts", conn)
+    conn.close()
+
+    # 2. Policz wystąpienia słowa w każdej linii i grupuj po sezonie
+    df["Text"] = df["Text"].str.lower()
+    query_lower = query.lower()
+    df["occurrences"] = df["Text"].str.count(rf'\b{query_lower}(?!\w)')
+
+    # Grupowanie po sezonie
+    grouped = df.groupby("Season", as_index=False)["occurrences"].sum()
+
+    # 3. Rysowanie wykresu słupkowego
+    plt.figure(figsize=(8, 5))
+    plt.bar(grouped["Season"], grouped["occurrences"], color="skyblue")
+    plt.title(f"Liczba wystąpień słowa '{query}' w poszczególnych sezonach")
+    plt.xlabel("Sezon")
+    plt.ylabel("Łączna liczba wystąpień")
+    plt.grid(axis="y", linestyle="--", alpha=0.7)
+
+    # 4. Konwersja wykresu do postaci base64
+    buffer = BytesIO()
+    plt.savefig(buffer, format='png')
+    buffer.seek(0)
+    bar_chart_base64 = base64.b64encode(buffer.getvalue()).decode('utf-8')
+    plt.close()  # zamykamy rysunek, by zwolnić zasoby
+
+    return bar_chart_base64
