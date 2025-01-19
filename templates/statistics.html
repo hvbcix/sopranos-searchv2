@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Statistics</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
     <h1>Statistics for "{{ query }}"</h1>
@@ -15,27 +16,36 @@
         <p>No query provided or no occurrences found. Please go back and enter a search term.</p>
     {% endif %}
 
-    <!-- Wstawiamy wykres, jeżeli chart_url jest dostępne -->
+    <div class="charts-row">
     {% if chart_url %}
+    <div class="chart-block">
         <h2>Occurrences Over Episodes</h2>
         <img src="data:image/png;base64,{{ chart_url }}" alt="Line chart" />
     {% endif %}
+    </div>
 
-        <!-- WYKRES SŁUPKOWY (Bar Chart) -->
+    <div class="chart-block">
     {% if bar_chart_url %}
         <h2>Occurrences By Season (Bar Chart)</h2>
         <img src="data:image/png;base64,{{ bar_chart_url }}" alt="Bar chart">
     {% endif %}
+    </div>
 
+    <div class="chart-block">
     {% if sentiment_pie_url %}
     <h2>Sentiment Pie Chart</h2>
     <img src="data:image/png;base64,{{ sentiment_pie_url }}" alt="Pie chart">
     {% endif %}
+    </div>
+    </div>
 
+    <div class="wordcloud-block">
     {% if wordcloud_url %}
   <h2>Word Cloud (All Transcripts)</h2>
   <img src="data:image/png;base64,{{ wordcloud_url }}" alt="Word Cloud">
     {% endif %}
+    </div>
+    
 
     <br>
     <a href="/">Go Back</a>

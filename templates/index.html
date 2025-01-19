@@ -4,14 +4,16 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sopranos Search</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
 </head>
 <body>
   <h1>Sopranos Search Engine</h1>
-  
-  <!-- Jeden wspólny formularz -->
+<div class="search-container">
+    <img src="{{ url_for('static', filename='image.png') }}" class="logo" alt="Logo">
   <form method="POST" action="">
       <input type="text" name="query" placeholder="Type your search..." value="{{ query }}">
       
+    <div class="filters">
       <select name="similarity_metric">
           <option value="cosine" {% if similarity_metric == "cosine" %}selected{% endif %}>Cosine Similarity</option>
           <option value="jaccard" {% if similarity_metric == "jaccard" %}selected{% endif %}>Jaccard Similarity</option>
@@ -65,7 +67,9 @@
               <option value="{{ season }}" {% if selected_season == season|string %}selected{% endif %}>Season {{ season }}</option>
           {% endfor %}
       </select>
+    </div>
 
+    <div class="buttons">
       <!-- Dwa przyciski -->
       <!-- 1) Zwykłe wyszukiwanie (POST na tę samą stronę) -->
       <button type="submit" name="search">Search</button>
@@ -73,8 +77,11 @@
       <!-- 2) GET na /statistics z tymi samymi danymi (m.in. query) -->
       <!--    kluczowe są: formmethod="GET" i formaction="/statistics" -->
       <button type="submit" formmethod="GET" formaction="/statistics">Show Statistics</button>
+    </div>
   </form>
+</div>  
 
+<div class="results">
   <h2>Results</h2>
   {% if no_results %}
       <p>No results found for your query.</p>
@@ -88,5 +95,6 @@
           {% endfor %}
       </ul>
   {% endif %}
+</div>  
 </body>
 </html>

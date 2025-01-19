@@ -27,10 +27,7 @@ def calculate_total_occurrences(query):
 
 
 def plot_occurrences_over_episodes(query):
-    """
-    Zwraca dane wykresu (base64-encoded PNG) pokazującego
-    liczbę wystąpień danego słowa w kolejnych odcinkach.
-    """
+
     # 1. Pobranie danych z bazy
     conn = sqlite3.connect("database/sopranos_data.db")
     df = pd.read_sql_query("SELECT Season, Episode, Text FROM transcripts", conn)
@@ -87,7 +84,7 @@ def plot_occurrences_by_season(query):
     grouped = df.groupby("Season", as_index=False)["occurrences"].sum()
 
     # 3. Rysowanie wykresu słupkowego
-    plt.figure(figsize=(8, 5))
+    plt.figure(figsize=(10, 6))
     plt.bar(grouped["Season"], grouped["occurrences"], color="skyblue")
     plt.title(f"Liczba wystąpień słowa '{query}' w poszczególnych sezonach")
     plt.xlabel("Sezon")
@@ -149,7 +146,7 @@ def plot_sentiment_pie_chart(query):
     colors = [color_map[label] for label in labels]
 
     # 6. Rysowanie wykresu kołowego
-    plt.figure(figsize=(6, 6))
+    plt.figure(figsize=(10, 6))
     plt.pie(
         counts.values,
         labels=labels,
