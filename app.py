@@ -1,6 +1,6 @@
 from flask import Flask, request, render_template
 from search_logic import fetch_texts_from_db, prepare_data_for_tfidf, calculate_tfidf_matrix, search_with_similarity
-from statistics_logic import calculate_total_occurrences
+from statistics_logic import calculate_total_occurrences, plot_occurrences_over_episodes
 
 app = Flask(__name__)
 
@@ -85,12 +85,20 @@ def home():
 def statistics():
     query = request.args.get("query", "").strip()  # Get the query from the URL parameters
     if not query:
-        return render_template("statistics.html", query=query, total_occurrences=None)
+        # Zwracamy taki sam szablon, ale bez wartości total_occurrences i bez wykresu
+        return render_template("statistics.html", query=query, total_occurrences=None, chart_url=None)
 
-    # Calculate total occurrences of the query in the database
+    # 1. Obliczamy całkowitą liczbę wystąpień
     total_occurrences = calculate_total_occurrences(query)
 
-    return render_template("statistics.html", query=query, total_occurrences=total_occurrences)
+    # 2. Generujemy wykres (base64)
+    chart_url = plot_occurrences_over_episodes(query)
+
+    # 3. Renderujemy template
+    return render_template("statistics.html", 
+                           query=query, 
+                           total_occurrences=total_occurrences,
+                           chart_url=chart_url)
 
 
 if __name__ == "__main__":

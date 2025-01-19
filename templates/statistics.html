@@ -1,3 +1,4 @@
+<!-- statistics.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,6 +15,13 @@
         <p>No query provided or no occurrences found. Please go back and enter a search term.</p>
     {% endif %}
 
+    <!-- Wstawiamy wykres, jeżeli chart_url jest dostępne -->
+    {% if chart_url %}
+        <h2>Occurrences Over Episodes</h2>
+        <img src="data:image/png;base64,{{ chart_url }}" alt="Line chart" />
+    {% endif %}
+
+    <br>
     <a href="/">Go Back</a>
 </body>
 </html>
