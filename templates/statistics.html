@@ -10,7 +10,7 @@
     <h1>Statistics for "{{ query }}"</h1>
 
     {% if total_occurrences is not none %}
-        <p>The word "{{ query }}" appears {{ total_occurrences }} time(s) in the database.</p>
+        <p>The word "{{ query }}" appears {{ total_occurrences }} time(s) in the show.</p>
     {% else %}
         <p>No query provided or no occurrences found. Please go back and enter a search term.</p>
     {% endif %}
@@ -25,7 +25,7 @@
 
     <div class="chart-block">
     {% if bar_chart_url %}
-        <h2>Occurrences By Season (Bar Chart)</h2>
+        <h2>Occurrences By Season</h2>
         <img src="data:image/png;base64,{{ bar_chart_url }}" alt="Bar chart">
     {% endif %}
     </div>

@@ -84,7 +84,8 @@
       <ul>
           {% for result in results %}
               <li>
-                  <strong>Line {{ result['Line_Number'] }}, Season {{ result['Season'] }}, Episode {{ result['Episode'] }}</strong>: {{ result['Text'] }}
+                <strong>{{ result['Text'] }} </strong>
+                <br>Line {{ result['Line_Number'] }}, Season {{ result['Season'] }}, Episode {{ result['Episode'] }}</br> 
                   <br><em>Similarity: {{ result['Similarity'] }}</em>
               </li>
           {% endfor %}

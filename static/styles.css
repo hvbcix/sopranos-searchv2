@@ -146,3 +146,40 @@ html, body {
   margin: 30px auto;
   text-align: center;
 }  
+
+.results {
+  width: 80%;               /* szerokość kontenera, dostosuj wg własnej woli */
+  margin: 20px auto;        /* wyśrodkuj i dodaj górny/dolny margines */
+  text-align: left;         /* jeżeli chcesz, aby tekst wewnątrz był wyrównany do lewej */
+}
+
+.results h2 {
+  margin-bottom: 10px;
+  text-align: center;       /* tytuł wycentrowany */
+}
+
+.results ul {
+  list-style: none;         /* usuwa kropki (domyślny bullet list) */
+  padding: 0;               /* usuwa domyślny padding listy */
+  margin: 0;
+}
+
+.results li {
+  border: 1px solid #444;   /* szara ramka */
+  border-radius: 4px;       /* delikatnie zaokrąglone rogi */
+  padding: 10px;            /* wypełnienie w środku */
+  margin-bottom: 10px;      /* odstęp między kolejnymi wynikami */
+  background-color: #222;   /* ciemne tło (jeśli korzystasz z czarnego motywu) */
+  color: #fff;              /* jasny tekst (jeśli masz ciemne tło) */
+}
+
+.results li strong {
+  display: block;           /* aby ‘Line X...’ było w osobnej linii, opcjonalne */
+  margin-bottom: 5px;
+}
+
+/* Opcjonalnie styl dla .results li em, jeśli chcesz np. inny kolor */
+.results li em {
+  color: #ccc;
+  font-size: 0.9em;
+}
